@@ -27,6 +27,12 @@ export const sendMessage = async (req, res) => {
       conversation.messages.push(newMessage._id);
     }
 
+    // await newMessage.save();
+    // await conversation.save();
+
+    // this is an example of how we can use Promise.all to run multiple async functions
+    await Promise.all([newMessage.save(), conversation.save()]);
+
     res.status(201).json(newMessage);
   } catch (error) {
     console.log("Error in message controller", error.message);
