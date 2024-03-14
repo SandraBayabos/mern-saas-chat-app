@@ -24,10 +24,10 @@ export const sendMessage = async (req, res) => {
     });
 
     if (newMessage) {
-      conversation.messages.push(newMessage);
+      conversation.messages.push(newMessage._id);
     }
 
-    res.status(201).json({ message: "Message sent successfully" });
+    res.status(201).json(newMessage);
   } catch (error) {
     console.log("Error in message controller", error.message);
     res.status(500).json({ message: `Internal Server Error` });
