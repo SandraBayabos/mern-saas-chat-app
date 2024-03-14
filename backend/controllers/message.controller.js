@@ -42,4 +42,26 @@ export const sendMessage = async (req, res) => {
   }
 };
 
-export default sendMessage;
+export const getMessages = async (req, res) => {
+  try {
+    const { id: userToChatId } = req.params;
+    const senderId = req.userId._id; // coming from protectRoute middleware
+
+    const conversation = await Conversation.findOne({
+      participants: { $all: [senderId, userToChatId] },
+    }).populate("messages"); // not reference but actual messages
+
+    if (!conversation) {
+      return res.status(200).json([]);
+    }
+
+    const messages = conversation.messages;
+
+    res.status(200).json(messages);
+
+    
+  } catch (error) {
+    console.log("Error in message controller", error.message);
+    res.status(500).json({ message: `Internal Server Error` });
+  }
+};
