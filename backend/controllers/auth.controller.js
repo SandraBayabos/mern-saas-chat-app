@@ -54,10 +54,45 @@ export const signup = async (req, res) => {
   }
 };
 
-export const login = (req, res) => {
-  console.log("Login user");
+export const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const user = await User.findOne({ username });
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user?.password || ""
+    );
+
+    if (!user || !isPasswordCorrect) {
+      return res.status(400).json({ message: "Invalid username or password" });
+    }
+
+    generateTokenAndSetCookie(user._id, res);
+
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      username: user.username,
+      profilePicture: user.profilePicture,
+      message: "You've logged in!",
+    });
+  } catch (error) {
+    console.log("Error in login", error.message);
+    res.status(500).json({ message: `${error.message}` });
+  }
 };
 
 export const logout = (req, res) => {
-  console.log("Logout user");
+  try {
+    res.clearCookie("jwt", "", { maxAge: 0, path: "/", // Specify the path where the cookie is valid
+    domain: "/", // Specify the domain where the cookie is valid
+    httpOnly: true, // Ensure that the cookie is only accessible via HTTP(S)
+    secure: true, // Ensure that the cookie is only sent over HTTPS
+    sameSite: "strict" });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.log("Error in logout controller", error.message);
+    res.status(500).json({ message: `${error.message}` });
+  }
 };
