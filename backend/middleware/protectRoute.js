@@ -5,10 +5,6 @@ const protectRoute = async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
 
-    console.log('cookies', req.cookies)
-
-    console.log("Token in protectRoute middleware", token);
-
     if (!token) {
       return res
         .status(401)
