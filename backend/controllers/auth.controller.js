@@ -85,11 +85,14 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   try {
-    res.clearCookie("jwt", "", { maxAge: 0, path: "/", // Specify the path where the cookie is valid
-    domain: "/", // Specify the domain where the cookie is valid
-    httpOnly: true, // Ensure that the cookie is only accessible via HTTP(S)
-    secure: true, // Ensure that the cookie is only sent over HTTPS
-    sameSite: "strict" });
+    res.clearCookie("jwt", "", {
+      maxAge: 0,
+      path: "/", // Specify the path where the cookie is valid
+      domain: "/", // Specify the domain where the cookie is valid
+      httpOnly: true, // Ensure that the cookie is only accessible via HTTP(S)
+      secure: true, // Ensure that the cookie is only sent over HTTPS
+      sameSite: "strict",
+    });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     console.log("Error in logout controller", error.message);
