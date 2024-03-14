@@ -27,6 +27,8 @@ export const sendMessage = async (req, res) => {
       conversation.messages.push(newMessage._id);
     }
 
+    // SOCKET IO FUNCTIONALITY WILL GO HERE
+
     // await newMessage.save();
     // await conversation.save();
 
